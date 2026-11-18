@@ -69,21 +69,21 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Implement `UrllibHttpClient` (timeout, User-Agent, maps `URLError`/timeouts/HTTP ≥ 400 to `SourceUnavailableError`) in `currency_converter/adapters/http_client.py`
-- [ ] T015 [P] [US1] Implement `BnmXmlParser` (empty body → `NoRatesPublishedError`, broken XML / missing fields → `MalformedResponseError`, `Decimal` values, nominal) in `currency_converter/adapters/bnm.py`
-- [ ] T016 [US1] Implement `BnmRateProvider` (URL `…?get_xml=1&date=DD.MM.YYYY`, uses `HttpClient` + `RateTableParser`) in `currency_converter/adapters/bnm.py`
-- [ ] T017 [P] [US1] Implement `CurrencyConverter` and `Conversion` (cross rate through MDL, inverse rate, same currency) in `currency_converter/domain/conversion.py`
-- [ ] T018 [US1] Implement `RateService.lookup(requested_date)` live path in `currency_converter/application/rate_service.py`
-- [ ] T019 [US1] Implement `ConverterService.rates()` / `convert()` (validate → lookup → convert) in `currency_converter/application/converter_service.py`
-- [ ] T020 [P] [US1] Implement source labels in `currency_converter/presentation/messages_ru.py` and `present_lookup`, `present_currencies`, `present_conversion` in `currency_converter/presentation/json_presenter.py` (contracts/http-api.md)
-- [ ] T021 [US1] Implement `ApiController` (`/api/health`, `/api/rates`, `/api/convert`) in `currency_converter/web/api.py` and wire it in `bootstrap.py`
-- [ ] T022 [US1] Create the page structure per contracts/ui.md in `currency_converter/web/static/index.html` and the logo/favicon in `currency_converter/web/static/img/logo.svg`
-- [ ] T023 [P] [US1] Create the design system and components (tokens, light/dark, glass card, pickers, swap, button, result card, chips, banners, skeletons, motion, reduced motion, ≥ 360 px) in `currency_converter/web/static/css/styles.css`
-- [ ] T024 [P] [US1] Implement the fetch wrapper `ApiClient` in `currency_converter/web/static/js/api.js`
-- [ ] T025 [P] [US1] Implement the searchable `CurrencyPicker` component (popular first, keyboard navigation) in `currency_converter/web/static/js/currency-picker.js`
-- [ ] T026 [P] [US1] Implement the theme switch in `currency_converter/web/static/js/theme.js`
-- [ ] T027 [US1] Implement the page controller in `currency_converter/web/static/js/app.js`: load rates, enable/disable Convert, Enter key, convert, swap with auto-recalculation, result card, copy result, latest-request-wins, loading indicators (spinner on Convert, skeleton while rates load; FR-016)
-- [ ] T028 [P] [US1] Implement `AppWindowLauncher`, `DefaultBrowserLauncher`, `FallbackBrowserLauncher` in `currency_converter/adapters/browser.py` and use them in `bootstrap.py` (skipped with `--no-browser`)
+- [X] T014 [P] [US1] Implement `UrllibHttpClient` (timeout, User-Agent, maps `URLError`/timeouts/HTTP ≥ 400 to `SourceUnavailableError`) in `currency_converter/adapters/http_client.py`
+- [X] T015 [P] [US1] Implement `BnmXmlParser` (empty body → `NoRatesPublishedError`, broken XML / missing fields → `MalformedResponseError`, `Decimal` values, nominal) in `currency_converter/adapters/bnm.py`
+- [X] T016 [US1] Implement `BnmRateProvider` (URL `…?get_xml=1&date=DD.MM.YYYY`, uses `HttpClient` + `RateTableParser`) in `currency_converter/adapters/bnm.py`
+- [X] T017 [P] [US1] Implement `CurrencyConverter` and `Conversion` (cross rate through MDL, inverse rate, same currency) in `currency_converter/domain/conversion.py`
+- [X] T018 [US1] Implement `RateService.lookup(requested_date)` live path in `currency_converter/application/rate_service.py`
+- [X] T019 [US1] Implement `ConverterService.rates()` / `convert()` (validate → lookup → convert) in `currency_converter/application/converter_service.py`
+- [X] T020 [P] [US1] Implement source labels in `currency_converter/presentation/messages_ru.py` and `present_lookup`, `present_currencies`, `present_conversion` in `currency_converter/presentation/json_presenter.py` (contracts/http-api.md)
+- [X] T021 [US1] Implement `ApiController` (`/api/health`, `/api/rates`, `/api/convert`) in `currency_converter/web/api.py` and wire it in `bootstrap.py`
+- [X] T022 [US1] Create the page structure per contracts/ui.md in `currency_converter/web/static/index.html` and the logo/favicon in `currency_converter/web/static/img/logo.svg`
+- [X] T023 [P] [US1] Create the design system and components (tokens, light/dark, glass card, pickers, swap, button, result card, chips, banners, skeletons, motion, reduced motion, ≥ 360 px) in `currency_converter/web/static/css/styles.css`
+- [X] T024 [P] [US1] Implement the fetch wrapper `ApiClient` in `currency_converter/web/static/js/api.js`
+- [X] T025 [P] [US1] Implement the searchable `CurrencyPicker` component (popular first, keyboard navigation) in `currency_converter/web/static/js/currency-picker.js`
+- [X] T026 [P] [US1] Implement the theme switch in `currency_converter/web/static/js/theme.js`
+- [X] T027 [US1] Implement the page controller in `currency_converter/web/static/js/app.js`: load rates, enable/disable Convert, Enter key, convert, swap with auto-recalculation, result card, copy result, latest-request-wins, loading indicators (spinner on Convert, skeleton while rates load; FR-016)
+- [X] T028 [P] [US1] Implement `AppWindowLauncher`, `DefaultBrowserLauncher`, `FallbackBrowserLauncher` in `currency_converter/adapters/browser.py` and use them in `bootstrap.py` (skipped with `--no-browser`)
 
 **Checkpoint**: US1 works end to end online
 

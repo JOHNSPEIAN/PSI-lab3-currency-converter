@@ -9,6 +9,9 @@ from typing import Sequence
 
 from currency_converter import __version__
 from currency_converter.adapters.bnm import BnmRateProvider, BnmXmlParser
+from currency_converter.adapters.browser import (
+    AppWindowLauncher, DefaultBrowserLauncher, FallbackBrowserLauncher,
+)
 from currency_converter.adapters.clock import SystemClock
 from currency_converter.adapters.http_client import UrllibHttpClient
 from currency_converter.application.converter_service import ConverterService
@@ -58,6 +61,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"Конвертер валют {__version__} запущен: {url}")
     print(f"Сохранённые курсы: {config.cache_file}")
     print("Для остановки нажмите Ctrl+C.")
+    if config.open_browser:
+        launcher = FallbackBrowserLauncher([AppWindowLauncher(), DefaultBrowserLauncher()])
+        if not launcher.open(url):
+            print("Откройте адрес в браузере вручную.")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
