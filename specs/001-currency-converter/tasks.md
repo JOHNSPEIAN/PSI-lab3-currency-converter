@@ -34,9 +34,9 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create the package skeleton per plan.md: `currency_converter/{domain,application,adapters,presentation,web}/__init__.py`, `currency_converter/__init__.py` (`__version__ = "1.0.0"`), `currency_converter/__main__.py`, `main.py` launcher, `currency_converter/web/static/{css,js,img}/`
-- [ ] T002 [P] Create `pyproject.toml` (project metadata, `requires-python >= 3.10`, `[tool.pytest.ini_options]` with `testpaths = ["tests"]`, `pythonpath = ["."]`) and `requirements-dev.txt` (`pytest>=8`)
-- [ ] T003 [P] Implement `AppConfig` and `parse_config(argv, environ)` in `currency_converter/config.py`: `--host` (127.0.0.1), `--port` (8765), `--data-dir` / `CURRENCY_CONVERTER_DATA_DIR` (default per research R6), `--source-url` (BNM base URL), `--timeout` (8 s), `--no-browser`
+- [X] T001 Create the package skeleton per plan.md: `currency_converter/{domain,application,adapters,presentation,web}/__init__.py`, `currency_converter/__init__.py` (`__version__ = "1.0.0"`), `currency_converter/__main__.py`, `main.py` launcher, `currency_converter/web/static/{css,js,img}/`
+- [X] T002 [P] Create `pyproject.toml` (project metadata, `requires-python >= 3.10`, `[tool.pytest.ini_options]` with `testpaths = ["tests"]`, `pythonpath = ["."]`) and `requirements-dev.txt` (`pytest>=8`)
+- [X] T003 [P] Implement `AppConfig` and `parse_config(argv, environ)` in `currency_converter/config.py`: `--host` (127.0.0.1), `--port` (8765), `--data-dir` / `CURRENCY_CONVERTER_DATA_DIR` (default per research R6), `--source-url` (BNM base URL), `--timeout` (8 s), `--no-browser`
 
 ---
 

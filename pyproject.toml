@@ -1,0 +1,24 @@
+[project]
+name = "currency-converter"
+version = "1.0.0"
+description = "Currency converter with official National Bank of Moldova rates and a local web GUI"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+currency-converter = "currency_converter.bootstrap:main"
+
+[tool.setuptools.packages.find]
+include = ["currency_converter*"]
+
+[tool.setuptools.package-data]
+currency_converter = ["web/static/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
