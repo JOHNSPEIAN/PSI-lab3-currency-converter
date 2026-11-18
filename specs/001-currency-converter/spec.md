@@ -16,6 +16,16 @@ error, no conversion; identical currencies — no error; caching — the last su
 stored locally and survives a restart. Conversion must be correct in both directions. The interface
 must be beautiful and pleasant to use."
 
+## Clarifications
+
+### Session 2026-11-18
+
+- Q: What form does the graphical interface take — a native desktop window or a local web page? → A: A local web application: the program runs on the user's computer and opens its interface in a browser window (app-style window when the browser supports it). It needs no internet for its own assets.
+- Q: What do the currency selectors show when the app starts offline? → A: The currencies of the saved copy (with the offline offer shown); if there is no saved copy, an empty state with a "Retry" action is shown instead of the form.
+- Q: After the user accepts the saved rates, is the offer repeated for every conversion? → A: No. The app stays in "saved copy" mode for the session, with a visible banner and a "Try live data" action; a successful live download leaves that mode.
+- Q: Should changes after a result is shown recalculate automatically? → A: Swap, currency change and date change recalculate automatically when a result is already shown; amount edits are applied with Convert or Enter.
+- Q: How is the "tomorrow" date handled before BNM publishes it? → A: Like any unpublished date (FR-012): the latest earlier rate is used with an explanation that the rate for tomorrow is usually published after 13:00 Chisinau time.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Convert an amount at today's official rate (Priority: P1)
@@ -152,8 +162,9 @@ Chisinau time; each time the used date and an explanation are shown.
   allow searching the list by code or name.
 - **FR-003**: The system MUST provide a rate date field, pre-filled with today's date, accepting
   dates from 01.01.2000 up to tomorrow.
-- **FR-004**: The system MUST provide a swap action that exchanges source and target currencies and
-  recalculates an already shown result.
+- **FR-004**: The system MUST provide a swap action that exchanges source and target currencies.
+  When a result is already shown, swap, currency change and date change MUST recalculate it
+  automatically; amount edits are applied with Convert or Enter.
 - **FR-005**: The Convert action MUST be disabled until the amount, both currencies and the date are
   filled; pressing Enter in the amount field MUST trigger the conversion when it is enabled.
 - **FR-006**: The system MUST display the converted amount and the exchange rate in both directions
@@ -172,10 +183,13 @@ Chisinau time; each time the used date and an explanation are shown.
   day and explicitly tell the user which date is used.
 - **FR-012**: When the source publishes no rates for a date (empty answer or no currencies), the
   system MUST try earlier dates one by one (up to 10 days back), use the first date with rates and
-  explicitly tell the user both dates; if nothing is found it MUST show an error.
+  explicitly tell the user both dates; if nothing is found it MUST show an error. For tomorrow's
+  date the message MUST add that the rate is usually published after 13:00 Chisinau time.
 - **FR-013**: When the source is unreachable (no network, timeout, server error) the system MUST
   NOT crash, MUST show an understandable message and, if saved rates exist, MUST offer to use them,
-  stating their rate date and save time. Using them requires an explicit user action.
+  stating their rate date and save time. Using them requires an explicit user action; after it the
+  app stays in "saved copy" mode for the session with a visible banner and a "Try live data" action.
+  When the app starts offline without a saved copy, an empty state with "Retry" replaces the form.
 - **FR-014**: The system MUST store the last successful source response locally; the stored copy
   MUST survive application restarts and MUST be refreshed after each successful download.
 - **FR-015**: A malformed source response MUST be handled like an unreachable source (FR-013).
@@ -185,6 +199,8 @@ Chisinau time; each time the used date and an explanation are shown.
 - **FR-018**: All user-visible texts MUST be in Russian.
 - **FR-019**: Rounding for display: converted amounts to 2 decimal places (more significant digits
   when the absolute value is below 0.01), rates to 4 decimal places; rounding half up.
+- **FR-020**: The interface MUST run locally on the user's computer and open in a browser window;
+  all its assets MUST be served locally so the interface itself loads without internet.
 
 ### Key Entities
 
