@@ -6,7 +6,9 @@ import http.client
 import urllib.error
 import urllib.request
 
-from currency_converter.domain.errors import MalformedResponseError, SourceUnavailableError
+from currency_converter.domain.errors import (
+    HttpStatusError, MalformedResponseError, SourceUnavailableError,
+)
 
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 
@@ -25,7 +27,7 @@ class UrllibHttpClient:
             with urllib.request.urlopen(request, timeout=self._timeout) as response:
                 payload = response.read(MAX_RESPONSE_BYTES + 1)
         except urllib.error.HTTPError as exc:  # subclass of URLError: must come first
-            raise SourceUnavailableError(f"HTTP {exc.code}") from exc
+            raise HttpStatusError(exc.code) from exc
         except urllib.error.URLError as exc:
             raise SourceUnavailableError(str(exc.reason)) from exc
         except (TimeoutError, ConnectionError, http.client.HTTPException, OSError) as exc:

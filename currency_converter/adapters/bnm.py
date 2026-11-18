@@ -8,7 +8,8 @@ Feed format::
       ...
     </ValCurs>
 
-An empty body means that nothing is published for the date.
+Nothing published for the date (future dates, tomorrow before ~13:00) is answered with
+``404 Not Found`` and an empty body; an empty 200 answer is treated the same way.
 """
 
 from __future__ import annotations
@@ -19,11 +20,14 @@ from urllib.parse import urlencode
 from xml.etree import ElementTree
 
 from currency_converter.config import DEFAULT_SOURCE_URL
-from currency_converter.domain.errors import MalformedResponseError, NoRatesPublishedError
+from currency_converter.domain.errors import (
+    HttpStatusError, MalformedResponseError, NoRatesPublishedError,
+)
 from currency_converter.domain.models import MDL, Currency, ExchangeRate, RateTable
 from currency_converter.ports import HttpClient, RateTableParser
 
 BNM_DATE_FORMAT = "%d.%m.%Y"
+NOT_PUBLISHED_STATUS = 404
 
 
 class BnmXmlParser:
@@ -93,4 +97,10 @@ class BnmRateProvider:
         return f"{self._base_url}?{query}"
 
     def fetch(self, rate_date: date) -> RateTable:
-        return self._parser.parse(self._http.get(self.url_for(rate_date)), rate_date)
+        try:
+            payload = self._http.get(self.url_for(rate_date))
+        except HttpStatusError as exc:
+            if exc.status == NOT_PUBLISHED_STATUS:
+                raise NoRatesPublishedError(rate_date) from exc
+            raise
+        return self._parser.parse(payload, rate_date)

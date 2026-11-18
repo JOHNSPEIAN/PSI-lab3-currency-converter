@@ -47,6 +47,14 @@ class SourceUnavailableError(RateSourceError):
         super().__init__(f"rate source unavailable: {reason}")
 
 
+class HttpStatusError(SourceUnavailableError):
+    """The server answered with an error status; adapters may give a status a special meaning."""
+
+    def __init__(self, status: int) -> None:
+        self.status = status
+        super().__init__(f"HTTP {status}")
+
+
 class MalformedResponseError(RateSourceError):
     """The source answered, but the answer cannot be understood."""
 
