@@ -21,11 +21,11 @@ Source observations were made on 2026-11-04 and 2026-11-18 with real requests to
 | Business day (03.11.2026, 18.11.2026) | 200, `ValCurs Date` = requested date, 40 `<Valute>` |
 | Saturday 31.10.2026 / Sunday 01.11.2026 | 200, values identical to Friday 30.10, but `Date` = requested date |
 | Holiday 01.01.2026 | 200, 40 currencies |
-| Tomorrow before publication (19.11.2026 at the time of the check) and future dates | 200 with an **empty body** (0 bytes) |
+| Tomorrow before publication (19.11.2026 at the time of the check) and future dates | **404 Not Found** with an empty body (0 bytes) — *corrected during implementation; first recorded as "200 with an empty body" because only the body size had been checked* |
 | `Nominal` | 1 for most currencies; 10 for ALL, AMD, …; 100 for HUF, … |
 
 - **Decision**: (a) weekend dates are shifted to the previous Friday *before* requesting, so the
-  displayed rate date is the real publication date; (b) an empty body or a document without
+  displayed rate date is the real publication date; (b) HTTP 404, an empty body or a document without
   `<Valute>` means "not published" → step back one business day, up to 10 calendar days from the
   requested date; (c) the date label returned by BNM is trusted for business days.
 - **Alternatives considered**: trusting BNM's weekend answer as-is — would show "rate of Sunday",
