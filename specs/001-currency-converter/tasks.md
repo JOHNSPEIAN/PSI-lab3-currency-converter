@@ -135,10 +135,10 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T040 [P] Write `README.md` (purpose, requirements, run, options, data directory, architecture overview)
-- [ ] T041 [P] Write the operating manual `docs/USER_GUIDE.md` (Russian, every screen state and scenario, troubleshooting)
-- [ ] T042 [P] Add Windows launcher `run.bat`
-- [ ] T043 Run quickstart.md scenarios V1–V12 and fix findings
+- [X] T040 [P] Write `README.md` (purpose, requirements, run, options, data directory, architecture overview)
+- [X] T041 [P] Write the operating manual `docs/USER_GUIDE.md` (Russian, every screen state and scenario, troubleshooting)
+- [X] T042 [P] Add Windows launcher `run.bat`
+- [X] T043 Run quickstart.md scenarios V1–V12 and fix findings
 
 ---
 
