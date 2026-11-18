@@ -46,16 +46,16 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 [P] Implement the error hierarchy from data-model.md in `currency_converter/domain/errors.py` (`ConverterError`, `FieldError`, `ValidationError`, `CurrencyNotAvailableError`, `RateSourceError` and subclasses, `NoSavedCopyError`)
-- [ ] T005 [P] Implement `Currency`, `ExchangeRate`, `RateTable`, `MDL` in `currency_converter/domain/models.py` (frozen dataclasses, `per_unit`, `currencies()`, `find()`)
-- [ ] T006 [P] Implement `is_weekend()` and `previous_business_day()` in `currency_converter/domain/calendar.py`
-- [ ] T007 [P] Implement `AmountParser`, `RateDateParser` and `ConversionRequestValidator` (all FR-008 rules, collects every field error) in `currency_converter/domain/validation.py`
-- [ ] T008 Define the ports `HttpClient`, `RateTableParser`, `RateProvider`, `RateCache`, `Clock`, `BrowserLauncher` as `typing.Protocol` in `currency_converter/ports.py`
-- [ ] T009 [P] Implement `SourceKind`, `NoticeKind`, `Notice`, `SavedCopy`, `SavedCopyInfo`, `RateLookup`, `RatesUnavailableError` in `currency_converter/application/lookup.py`
-- [ ] T010 [P] Implement `SystemClock` in `currency_converter/adapters/clock.py`
-- [ ] T011 [P] Implement display formatting (`format_amount`, `format_rate`, `format_date`, `format_datetime`; research R5) in `currency_converter/presentation/formatting.py`
-- [ ] T012 Implement the HTTP shell in `currency_converter/web/server.py`: request handler factory with injected controller, routing `GET /`, `GET /static/*` (traversal-safe, explicit MIME map), `GET/POST /api/*`, JSON responses, 16 KiB body limit, security headers, catch-all 500 with logging
-- [ ] T013 Implement the composition root `build_application(config)` and `main()` in `currency_converter/bootstrap.py`: UTF-8 console (research R9), logging, port selection (research R10), start server, print URL, Ctrl+C shutdown
+- [X] T004 [P] Implement the error hierarchy from data-model.md in `currency_converter/domain/errors.py` (`ConverterError`, `FieldError`, `ValidationError`, `CurrencyNotAvailableError`, `RateSourceError` and subclasses, `NoSavedCopyError`)
+- [X] T005 [P] Implement `Currency`, `ExchangeRate`, `RateTable`, `MDL` in `currency_converter/domain/models.py` (frozen dataclasses, `per_unit`, `currencies()`, `find()`)
+- [X] T006 [P] Implement `is_weekend()` and `previous_business_day()` in `currency_converter/domain/calendar.py`
+- [X] T007 [P] Implement `AmountParser`, `RateDateParser` and `ConversionRequestValidator` (all FR-008 rules, collects every field error) in `currency_converter/domain/validation.py`
+- [X] T008 Define the ports `HttpClient`, `RateTableParser`, `RateProvider`, `RateCache`, `Clock`, `BrowserLauncher` as `typing.Protocol` in `currency_converter/ports.py`
+- [X] T009 [P] Implement `SourceKind`, `NoticeKind`, `Notice`, `SavedCopy`, `SavedCopyInfo`, `RateLookup`, `RatesUnavailableError` in `currency_converter/application/lookup.py`
+- [X] T010 [P] Implement `SystemClock` in `currency_converter/adapters/clock.py`
+- [X] T011 [P] Implement display formatting (`format_amount`, `format_rate`, `format_date`, `format_datetime`; research R5) in `currency_converter/presentation/formatting.py`
+- [X] T012 Implement the HTTP shell in `currency_converter/web/server.py`: request handler factory with injected controller, routing `GET /`, `GET /static/*` (traversal-safe, explicit MIME map), `GET/POST /api/*`, JSON responses, 16 KiB body limit, security headers, catch-all 500 with logging
+- [X] T013 Implement the composition root `build_application(config)` and `main()` in `currency_converter/bootstrap.py`: UTF-8 console (research R9), logging, port selection (research R10), start server, print URL, Ctrl+C shutdown
 
 **Checkpoint**: `python main.py --no-browser` starts and serves an empty page
 
