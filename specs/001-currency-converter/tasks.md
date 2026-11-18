@@ -125,9 +125,9 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Independent Test**: quickstart V8–V9
 
-- [ ] T037 [US4] Implement the weekend shift and the not-published fallback (≤ 10 days back, `RatesNotFoundError`) with `WEEKEND` / `NOT_PUBLISHED` / `NOT_YET_PUBLISHED` notices in `currency_converter/application/rate_service.py`
-- [ ] T038 [US4] Add notice texts and `RATES_NOT_FOUND` mapping in `messages_ru.py`, `json_presenter.py`, `web/api.py`
-- [ ] T039 [US4] Date limits (min 2000-01-01, max tomorrow), «Сегодня» chip, info banners for notices and auto-recalculation on date change in `index.html` / `app.js` (the field itself comes from T022)
+- [X] T037 [US4] Implement the weekend shift and the not-published fallback (≤ 10 days back, `RatesNotFoundError`) with `WEEKEND` / `NOT_PUBLISHED` / `NOT_YET_PUBLISHED` notices in `currency_converter/application/rate_service.py`
+- [X] T038 [US4] Add notice texts and `RATES_NOT_FOUND` mapping in `messages_ru.py`, `json_presenter.py`, `web/api.py`
+- [X] T039 [US4] Date limits (min 2000-01-01, max tomorrow), «Сегодня» chip, info banners for notices and auto-recalculation on date change in `index.html` / `app.js` (the field itself comes from T022)
 
 **Checkpoint**: all user stories work independently
 

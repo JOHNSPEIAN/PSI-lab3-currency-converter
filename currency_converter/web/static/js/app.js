@@ -193,6 +193,7 @@ class ConverterPage {
   }
 
   #hideResult() {
+    this.banners.removeByPrefix("notice:");
     this.el.result.hidden = true;
     this.state.hasResult = false;
   }

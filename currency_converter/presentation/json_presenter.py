@@ -14,7 +14,7 @@ from currency_converter.application.lookup import (
 from currency_converter.domain.conversion import Conversion
 from currency_converter.domain.errors import (
     ConverterError, CurrencyNotAvailableError, FieldError, MalformedResponseError,
-    NoSavedCopyError, RateSourceError, ValidationError,
+    NoSavedCopyError, RateSourceError, RatesNotFoundError, ValidationError,
 )
 from currency_converter.domain.models import Currency, RateTable
 from currency_converter.presentation import messages_ru as ru
@@ -53,6 +53,10 @@ class JsonPresenter:
                      if saved else ru.NO_SAVED_COPY_YET)
             return HTTPStatus.SERVICE_UNAVAILABLE, self.error(
                 "SOURCE_UNAVAILABLE", f"{reason} {offer}", saved=saved)
+        if isinstance(error, RatesNotFoundError):
+            message = ru.RATES_NOT_FOUND.format(earliest=format_date(error.earliest_tried),
+                                                requested=format_date(error.requested_date))
+            return HTTPStatus.NOT_FOUND, self.error("RATES_NOT_FOUND", message)
         if isinstance(error, NoSavedCopyError):
             return HTTPStatus.NOT_FOUND, self.error("NO_SAVED_COPY", ru.NO_SAVED_COPY)
         if isinstance(error, RateSourceError):
@@ -106,6 +110,7 @@ class JsonPresenter:
         template = ru.NOTICE_MESSAGES[notice.kind.value]
         message = template.format(
             requested=format_date(notice.requested_date),
+            weekday=ru.WEEKDAYS[notice.requested_date.weekday()],
             used=format_date(notice.used_date),
             saved_at=format_datetime(notice.saved_at) if notice.saved_at else "",
         )
