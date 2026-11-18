@@ -31,6 +31,7 @@ Rebase, иначе пропадёт история шагов). Ветки ид�
 | 2 | `feature/implementation` | `main` | Implementation: currency converter with local web GUI |
 | 3 | `test/unit-tests` | `main` | Tests: 186 network-free unit tests |
 | 4 | `docs/report` | `main` | Docs: lab report and pull request notes |
+| 5 | `docs/readme-english` | `main` | Docs: English README with the Russian version kept |
 
 Тексты описаний лежат также отдельными файлами в `docs/pr/` — их удобно вставлять в поле описания PR.
 
