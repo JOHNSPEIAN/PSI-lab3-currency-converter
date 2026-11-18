@@ -19,11 +19,11 @@ class UrllibHttpClient:
         self._user_agent = user_agent
 
     def get(self, url: str) -> bytes:
-        request = urllib.request.Request(url, headers={
-            "User-Agent": self._user_agent,
-            "Accept": "application/xml, text/xml;q=0.9, */*;q=0.1",
-        })
         try:
+            request = urllib.request.Request(url, headers={
+                "User-Agent": self._user_agent,
+                "Accept": "application/xml, text/xml;q=0.9, */*;q=0.1",
+            })
             with urllib.request.urlopen(request, timeout=self._timeout) as response:
                 payload = response.read(MAX_RESPONSE_BYTES + 1)
         except urllib.error.HTTPError as exc:  # subclass of URLError: must come first

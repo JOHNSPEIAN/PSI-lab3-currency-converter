@@ -146,16 +146,16 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Purpose**: Constitution Principle VI; required coverage: parsing, conversion incl. reverse direction, empty/malformed source responses, input validation
 
-- [ ] T044 [P] Record fixtures in `tests/fixtures/`: business day and weekend BNM answers, empty body, document without `<Valute>`, malformed XML, missing `<Value>`, non-numeric value
-- [ ] T045 [P] Parser tests in `tests/unit/test_bnm_parser.py`
-- [ ] T046 [P] Provider and HTTP error mapping tests (fake `HttpClient`) in `tests/unit/test_bnm_provider.py`
-- [ ] T047 [P] Conversion tests (direct, reverse, cross, nominal 10/100, same currency, symmetry) in `tests/unit/test_conversion.py`
-- [ ] T048 [P] Validation tests (all FR-008 cases) in `tests/unit/test_validation.py`
-- [ ] T049 [P] Rate service tests (weekend, fallback, window exhausted, offline with/without saved copy, saved mode, cache refresh) in `tests/unit/test_rate_service.py`
-- [ ] T050 [P] Cache tests (round trip, survives a new instance = restart, corrupted/missing/foreign schema) in `tests/unit/test_json_cache.py`
-- [ ] T051 [P] Formatting/presenter tests in `tests/unit/test_presentation.py`
-- [ ] T052 [P] API controller tests (200/422/503/404 payloads) in `tests/unit/test_api.py`
-- [ ] T053 Add the test section to `README.md`; run `python -m pytest` — all green
+- [X] T044 [P] Record fixtures in `tests/fixtures/`: business day and weekend BNM answers, empty body, document without `<Valute>`, malformed XML, missing `<Value>`, non-numeric value
+- [X] T045 [P] Parser tests in `tests/unit/test_bnm_parser.py`
+- [X] T046 [P] Provider and HTTP error mapping tests (fake `HttpClient`) in `tests/unit/test_bnm_provider.py`
+- [X] T047 [P] Conversion tests (direct, reverse, cross, nominal 10/100, same currency, symmetry) in `tests/unit/test_conversion.py`
+- [X] T048 [P] Validation tests (all FR-008 cases) in `tests/unit/test_validation.py`
+- [X] T049 [P] Rate service tests (weekend, fallback, window exhausted, offline with/without saved copy, saved mode, cache refresh) in `tests/unit/test_rate_service.py`
+- [X] T050 [P] Cache tests (round trip, survives a new instance = restart, corrupted/missing/foreign schema) in `tests/unit/test_json_cache.py`
+- [X] T051 [P] Formatting/presenter tests in `tests/unit/test_presentation.py`
+- [X] T052 [P] API controller tests (200/422/503/404 payloads) in `tests/unit/test_api.py`
+- [X] T053 Add the test section to `README.md`; run `python -m pytest` — all green
 
 ---
 
