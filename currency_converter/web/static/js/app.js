@@ -113,6 +113,7 @@ class ConverterPage {
   async convert() {
     if (this.el.convert.disabled && !this.state.hasResult) return;
     const seq = ++this.state.seq;
+    this.#clearFieldErrors();
     this.#setConverting(true);
     try {
       const data = await this.api.convert({
@@ -127,8 +128,8 @@ class ConverterPage {
       storePair({ source: this.source.value, target: this.target.value });
     } catch (error) {
       if (seq !== this.state.seq) return;
-      this.#hideResult();
-      this.#showError(error, () => this.convert());
+      this.#hideResult(); // never leave an old number next to new, invalid input
+      this.#handleConvertError(error);
     } finally {
       if (seq === this.state.seq) this.#setConverting(false);
     }
@@ -182,6 +183,47 @@ class ConverterPage {
 
   // ---------- Errors ----------
 
+  #handleConvertError(error) {
+    if (error.code === "VALIDATION") {
+      this.banners.remove("error");
+      for (const field of error.details.fields ?? []) this.#showFieldError(field.field, field.message);
+      return;
+    }
+    if (error.code === "CURRENCY_NOT_AVAILABLE") {
+      this.banners.remove("error");
+      const field = this.source.value === error.details.currency ? "source" : "target";
+      this.#showFieldError(field, error.message);
+      return;
+    }
+    this.#showError(error, () => this.convert());
+  }
+
+  #fieldElement(name) {
+    return this.el.form.querySelector(`.field[data-field="${name}"]`);
+  }
+
+  #showFieldError(name, message) {
+    const field = this.#fieldElement(name);
+    if (!field) return;
+    field.classList.add("has-error", "is-shaking");
+    field.addEventListener("animationend", () => field.classList.remove("is-shaking"), { once: true });
+    $(`${name}-error`).textContent = message;
+    if (name === "amount") this.el.amount.setAttribute("aria-invalid", "true");
+    if (name === "date") this.el.date.setAttribute("aria-invalid", "true");
+  }
+
+  #clearFieldError(name) {
+    this.#fieldElement(name)?.classList.remove("has-error", "is-shaking");
+    const message = $(`${name}-error`);
+    if (message) message.textContent = "";
+    if (name === "amount") this.el.amount.removeAttribute("aria-invalid");
+    if (name === "date") this.el.date.removeAttribute("aria-invalid");
+  }
+
+  #clearFieldErrors() {
+    for (const name of ["amount", "source", "target", "date"]) this.#clearFieldError(name);
+  }
+
   #showError(error, retry) {
     this.banners.show("error", {
       level: "error",
@@ -200,6 +242,7 @@ class ConverterPage {
       if (!el.convert.disabled) this.convert();
     });
     el.amount.addEventListener("input", () => {
+      this.#clearFieldError("amount");
       this.#refreshButton();
       if (this.state.hasResult) {
         el.result.classList.toggle("is-stale", el.amount.value !== this.state.last?.amount);
@@ -225,12 +268,15 @@ class ConverterPage {
   }
 
   #onPairChanged() {
+    this.#clearFieldError("source");
+    this.#clearFieldError("target");
     this.#updateAmountCode();
     storePair({ source: this.source.value, target: this.target.value });
     if (this.state.hasResult) this.convert();
   }
 
   #onDateChanged() {
+    this.#clearFieldError("date");
     this.el.todayBtn.setAttribute("aria-pressed", String(this.el.date.value === today()));
     this.#refreshButton();
     if (this.state.hasResult) this.convert();

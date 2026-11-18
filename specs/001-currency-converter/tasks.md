@@ -95,9 +95,9 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Independent Test**: quickstart V6–V7
 
-- [ ] T029 [US2] Add Russian texts for every `FieldError` code and for `CurrencyNotAvailableError` in `currency_converter/presentation/messages_ru.py`
-- [ ] T030 [US2] Map `ValidationError` → 422 `VALIDATION` with `fields[]` and `CurrencyNotAvailableError` → 422 in `currency_converter/web/api.py` / `json_presenter.py`
-- [ ] T031 [US2] Show field errors (outline, message, shake), clear them on edit and hide a stale result in `currency_converter/web/static/js/app.js` and `styles.css`
+- [X] T029 [US2] Add Russian texts for every `FieldError` code and for `CurrencyNotAvailableError` in `currency_converter/presentation/messages_ru.py`
+- [X] T030 [US2] Map `ValidationError` → 422 `VALIDATION` with `fields[]` and `CurrencyNotAvailableError` → 422 in `currency_converter/web/api.py` / `json_presenter.py`
+- [X] T031 [US2] Show field errors (outline, message, shake), clear them on edit and hide a stale result in `currency_converter/web/static/js/app.js` and `styles.css`
 
 **Checkpoint**: US1 + US2 work
 
