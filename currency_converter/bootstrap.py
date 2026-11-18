@@ -14,6 +14,8 @@ from currency_converter.adapters.browser import (
 )
 from currency_converter.adapters.clock import SystemClock
 from currency_converter.adapters.http_client import UrllibHttpClient
+from currency_converter.adapters.json_cache import JsonFileRateCache
+from currency_converter.adapters.memo import MemoizingRateProvider
 from currency_converter.application.converter_service import ConverterService
 from currency_converter.application.rate_service import RateService
 from currency_converter.config import AppConfig, parse_config
@@ -36,8 +38,9 @@ class Application:
 def build_application(config: AppConfig) -> Application:
     clock = SystemClock()
     http = UrllibHttpClient(timeout=config.timeout, user_agent=f"CurrencyConverter/{__version__}")
-    provider = BnmRateProvider(http, BnmXmlParser(), base_url=config.source_url)
-    rate_service = RateService(provider, clock)
+    bnm = BnmRateProvider(http, BnmXmlParser(), base_url=config.source_url)
+    provider = MemoizingRateProvider(bnm, clock)
+    rate_service = RateService(provider, JsonFileRateCache(config.cache_file), clock)
     service = ConverterService(rate_service, CurrencyConverter(), ConversionRequestValidator(), clock)
     api = ApiController(service, JsonPresenter(), version=__version__)
     return Application(config=config, api=api)

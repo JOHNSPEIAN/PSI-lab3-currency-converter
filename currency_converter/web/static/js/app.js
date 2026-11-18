@@ -62,12 +62,22 @@ class ConverterPage {
       rateDateChip: $("rate-date-chip"),
       sourceChip: $("source-chip"),
       copy: $("copy-btn"),
+      empty: $("empty-state"),
+      emptyRetry: $("empty-retry"),
     };
     this.source = new CurrencyPicker($("source-picker"), { labelId: "source-label" });
     this.target = new CurrencyPicker($("target-picker"), { labelId: "target-label" });
     this.banners = new Banners($("banners"));
     this.toast = new Toast($("toast"));
-    this.state = { ready: false, converting: false, hasResult: false, seq: 0, swapTurns: 0, last: null };
+    this.state = {
+      mode: "live", // "saved" after the user accepted the saved copy (FR-013)
+      ready: false,
+      converting: false,
+      hasResult: false,
+      seq: 0,
+      swapTurns: 0,
+      last: null,
+    };
   }
 
   async start() {
@@ -90,11 +100,15 @@ class ConverterPage {
     this.target.setLoading(true);
     this.el.card.setAttribute("aria-busy", "true");
     try {
-      const data = await this.api.rates({ date: this.el.date.value || undefined });
+      const data = await this.api.rates({ date: this.el.date.value || undefined, mode: this.state.mode });
       this.#applyCurrencies(data.currencies);
+      this.#hideEmpty();
       this.banners.remove("error");
+      if (this.state.mode === "live") this.banners.remove("offline");
     } catch (error) {
-      this.#showError(error, () => this.loadRates());
+      if (error.code === "SOURCE_UNAVAILABLE") await this.#handleOffline(error, { starting: true });
+      else if (error.code === "NO_SAVED_COPY") this.#leaveSavedMode(error);
+      else this.#showError(error, () => this.loadRates());
     } finally {
       this.el.card.setAttribute("aria-busy", "false");
       this.#refreshButton();
@@ -121,6 +135,7 @@ class ConverterPage {
         source: this.source.value,
         target: this.target.value,
         date: this.el.date.value,
+        mode: this.state.mode,
       });
       if (seq !== this.state.seq) return; // a newer request already took over
       this.banners.remove("error");
@@ -163,6 +178,7 @@ class ConverterPage {
       ? `${lookup.source_label} · сохранена ${lookup.saved_at_display}`
       : `${lookup.source_label} · bnm.md`;
 
+    this.#renderNotices(lookup);
     el.result.hidden = false;
     el.result.classList.remove("is-stale");
     this.state.hasResult = true;
@@ -181,12 +197,111 @@ class ConverterPage {
     this.state.hasResult = false;
   }
 
+  // ---------- Notices & offline mode ----------
+
+  #renderNotices(lookup) {
+    this.banners.removeByPrefix("notice:");
+    if (lookup.source === "live") {
+      this.banners.remove("offline");
+      this.banners.remove("saved-mode");
+    }
+    lookup.notices.forEach((notice, index) => {
+      if (notice.kind === "saved_copy") this.#showSavedModeBanner(notice.message);
+      else this.banners.show(`notice:${index}`, { level: notice.level, message: notice.message });
+    });
+  }
+
+  async #handleOffline(error, { starting = false } = {}) {
+    const saved = error.details.saved;
+    if (!saved) {
+      if (starting && !this.state.ready) this.#showEmpty(error.message);
+      else this.#showError(error, () => this.#retryLive());
+      return;
+    }
+    this.banners.remove("error");
+    this.banners.show("offline", {
+      level: "warning",
+      title: "Нет связи с НБМ",
+      message: error.message,
+      actions: [
+        { label: `Использовать курс от ${saved.rate_date_display}`, primary: true, onClick: () => this.#useSaved() },
+        { label: "Повторить", onClick: () => this.#retryLive() },
+      ],
+    });
+    if (starting && !this.state.ready) {
+      // Fill the pickers from the saved copy so the form is usable; live mode stays until accepted.
+      try {
+        const data = await this.api.rates({ mode: "saved" });
+        this.#applyCurrencies(data.currencies);
+      } catch {
+        /* nothing else to show: the banner already explains the situation */
+      }
+    }
+  }
+
+  async #useSaved() {
+    this.state.mode = "saved";
+    this.banners.remove("offline");
+    this.banners.remove("error");
+    this.#showSavedModeBanner("Работаем с сохранённой копией курсов НБМ. Данные могут быть неактуальны.");
+    if (!this.state.ready) await this.loadRates();
+    if (this.#isFilled()) await this.convert();
+  }
+
+  async #tryLive() {
+    this.state.mode = "live";
+    this.banners.remove("saved-mode");
+    await this.#retryLive();
+  }
+
+  async #retryLive() {
+    this.banners.remove("offline");
+    this.banners.remove("error");
+    if (this.state.ready && this.#isFilled()) await this.convert();
+    else await this.loadRates();
+  }
+
+  #leaveSavedMode(error) {
+    this.state.mode = "live";
+    this.banners.remove("saved-mode");
+    this.#showError(error, () => this.#retryLive());
+  }
+
+  #showSavedModeBanner(message) {
+    this.banners.show("saved-mode", {
+      level: "warning",
+      title: "Офлайн-режим",
+      message,
+      actions: [{ label: "Попробовать онлайн", onClick: () => this.#tryLive() }],
+    });
+  }
+
+  #showEmpty(message) {
+    this.el.form.hidden = true;
+    this.el.result.hidden = true;
+    this.el.empty.hidden = false;
+    $("empty-text").textContent = message;
+  }
+
+  #hideEmpty() {
+    this.el.form.hidden = false;
+    this.el.empty.hidden = true;
+  }
+
   // ---------- Errors ----------
 
   #handleConvertError(error) {
     if (error.code === "VALIDATION") {
       this.banners.remove("error");
       for (const field of error.details.fields ?? []) this.#showFieldError(field.field, field.message);
+      return;
+    }
+    if (error.code === "SOURCE_UNAVAILABLE") {
+      this.#handleOffline(error);
+      return;
+    }
+    if (error.code === "NO_SAVED_COPY") {
+      this.#leaveSavedMode(error);
       return;
     }
     if (error.code === "CURRENCY_NOT_AVAILABLE") {
@@ -258,6 +373,7 @@ class ConverterPage {
       this.#onDateChanged();
     });
     el.copy.addEventListener("click", () => this.#copyResult());
+    el.emptyRetry.addEventListener("click", () => this.loadRates());
   }
 
   #initDate() {
@@ -294,10 +410,13 @@ class ConverterPage {
     this.el.amountCode.textContent = this.source.value ?? "";
   }
 
-  #refreshButton() {
+  #isFilled() {
     const { el } = this;
-    const filled = el.amount.value.trim() !== "" && this.source.value && this.target.value && el.date.value;
-    el.convert.disabled = !(this.state.ready && filled);
+    return Boolean(el.amount.value.trim() && this.source.value && this.target.value && el.date.value);
+  }
+
+  #refreshButton() {
+    this.el.convert.disabled = !(this.state.ready && this.#isFilled());
   }
 
   #setConverting(converting) {

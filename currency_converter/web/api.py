@@ -52,7 +52,8 @@ class ApiController:
         return ApiResponse(HTTPStatus.OK, {"status": "ok", "version": self._version})
 
     def _rates(self, request: ApiRequest) -> ApiResponse:
-        lookup = self._service.rates(request.query.get("date") or None)
+        lookup = self._service.rates(request.query.get("date") or None,
+                                     use_saved=self._use_saved(request.query.get("mode")))
         return ApiResponse(HTTPStatus.OK, self._presenter.present_rates(lookup))
 
     def _convert(self, request: ApiRequest) -> ApiResponse:
@@ -60,8 +61,17 @@ class ApiController:
         outcome = self._service.convert(
             amount=self._text(data, "amount"), source=self._text(data, "source"),
             target=self._text(data, "target"), rate_date=self._text(data, "date"),
+            use_saved=self._use_saved(self._text(data, "mode")),
         )
         return ApiResponse(HTTPStatus.OK, self._presenter.present_conversion(outcome))
+
+    @staticmethod
+    def _use_saved(mode: str | None) -> bool:
+        if mode in (None, "", "live"):
+            return False
+        if mode == "saved":
+            return True
+        raise BadRequest(f"unknown mode {mode!r}")
 
     @staticmethod
     def _json_body(request: ApiRequest) -> dict[str, Any]:

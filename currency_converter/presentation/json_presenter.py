@@ -8,10 +8,13 @@ from http import HTTPStatus
 from typing import Any
 
 from currency_converter.application.converter_service import ConversionOutcome
-from currency_converter.application.lookup import RateLookup
+from currency_converter.application.lookup import (
+    Notice, NoticeKind, RateLookup, RatesUnavailableError, SavedCopyInfo,
+)
 from currency_converter.domain.conversion import Conversion
 from currency_converter.domain.errors import (
-    ConverterError, CurrencyNotAvailableError, FieldError, RateSourceError, ValidationError,
+    ConverterError, CurrencyNotAvailableError, FieldError, MalformedResponseError,
+    NoSavedCopyError, RateSourceError, ValidationError,
 )
 from currency_converter.domain.models import Currency, RateTable
 from currency_converter.presentation import messages_ru as ru
@@ -41,6 +44,17 @@ class JsonPresenter:
             message = ru.CURRENCY_NOT_AVAILABLE.format(code=error.code, date=format_date(error.rate_date))
             return HTTPStatus.UNPROCESSABLE_ENTITY, self.error(
                 "CURRENCY_NOT_AVAILABLE", message, currency=error.code)
+        if isinstance(error, RatesUnavailableError):
+            reason = (ru.SOURCE_MALFORMED if isinstance(error.cause, MalformedResponseError)
+                      else ru.SOURCE_NETWORK)
+            saved = self.saved_info(error.saved)
+            offer = (ru.OFFER_SAVED_COPY.format(rate_date=saved["rate_date_display"],
+                                                saved_at=saved["saved_at_display"])
+                     if saved else ru.NO_SAVED_COPY_YET)
+            return HTTPStatus.SERVICE_UNAVAILABLE, self.error(
+                "SOURCE_UNAVAILABLE", f"{reason} {offer}", saved=saved)
+        if isinstance(error, NoSavedCopyError):
+            return HTTPStatus.NOT_FOUND, self.error("NO_SAVED_COPY", ru.NO_SAVED_COPY)
         if isinstance(error, RateSourceError):
             return HTTPStatus.SERVICE_UNAVAILABLE, self.error(
                 "SOURCE_UNAVAILABLE", ru.GENERIC_SOURCE_ERROR, saved=None)
@@ -73,8 +87,30 @@ class JsonPresenter:
             "source_label": ru.SOURCE_LABELS[lookup.source],
             "saved_at": lookup.saved_at.isoformat() if lookup.saved_at else None,
             "saved_at_display": format_datetime(lookup.saved_at) if lookup.saved_at else None,
-            "notices": [],
+            "notices": [self.notice(n) for n in lookup.notices],
         }
+
+    @staticmethod
+    def saved_info(info: SavedCopyInfo | None) -> Json | None:
+        if info is None:
+            return None
+        return {
+            "rate_date": info.rate_date.isoformat(),
+            "rate_date_display": format_date(info.rate_date),
+            "saved_at": info.saved_at.isoformat(),
+            "saved_at_display": format_datetime(info.saved_at),
+        }
+
+    @staticmethod
+    def notice(notice: Notice) -> Json:
+        template = ru.NOTICE_MESSAGES[notice.kind.value]
+        message = template.format(
+            requested=format_date(notice.requested_date),
+            used=format_date(notice.used_date),
+            saved_at=format_datetime(notice.saved_at) if notice.saved_at else "",
+        )
+        level = "warning" if notice.kind is NoticeKind.SAVED_COPY else "info"
+        return {"kind": notice.kind.value, "level": level, "message": message}
 
     @staticmethod
     def currencies(table: RateTable) -> list[Json]:

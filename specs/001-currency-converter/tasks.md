@@ -109,11 +109,11 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Independent Test**: quickstart V10–V12
 
-- [ ] T032 [P] [US3] Implement `JsonFileRateCache` (schema 1, atomic write via temp + `os.replace`, corrupted/missing → `None`) in `currency_converter/adapters/json_cache.py`
-- [ ] T033 [US3] Extend `RateService`: save the saved copy after each live success, raise `RatesUnavailableError(cause, saved_info)` on source failures, `lookup(..., use_saved=True)` mode with `SAVED_COPY` notice, `NoSavedCopyError` in `currency_converter/application/rate_service.py`
-- [ ] T034 [P] [US3] Implement `MemoizingRateProvider` (positive results only, 30 min TTL, thread-safe) in `currency_converter/adapters/memo.py` and wire it in `bootstrap.py`
-- [ ] T035 [US3] Present `SOURCE_UNAVAILABLE` (503, `saved` info), `NO_SAVED_COPY` (404) and saved source labels in `json_presenter.py`, `messages_ru.py`, `web/api.py`
-- [ ] T036 [US3] Implement banners/toasts in `currency_converter/web/static/js/notices.js` and the offline flow in `app.js`: offer banner, saved-copy mode banner with «Попробовать онлайн», empty state with «Повторить» on start
+- [X] T032 [P] [US3] Implement `JsonFileRateCache` (schema 1, atomic write via temp + `os.replace`, corrupted/missing → `None`) in `currency_converter/adapters/json_cache.py`
+- [X] T033 [US3] Extend `RateService`: save the saved copy after each live success, raise `RatesUnavailableError(cause, saved_info)` on source failures, `lookup(..., use_saved=True)` mode with `SAVED_COPY` notice, `NoSavedCopyError` in `currency_converter/application/rate_service.py`
+- [X] T034 [P] [US3] Implement `MemoizingRateProvider` (positive results only, 30 min TTL, thread-safe) in `currency_converter/adapters/memo.py` and wire it in `bootstrap.py`
+- [X] T035 [US3] Present `SOURCE_UNAVAILABLE` (503, `saved` info), `NO_SAVED_COPY` (404) and saved source labels in `json_presenter.py`, `messages_ru.py`, `web/api.py`
+- [X] T036 [US3] Implement banners/toasts in `currency_converter/web/static/js/notices.js` and the offline flow in `app.js`: offer banner, saved-copy mode banner with «Попробовать онлайн», empty state with «Повторить» on start
 
 **Checkpoint**: US1–US3 work; app survives network loss and restarts
 

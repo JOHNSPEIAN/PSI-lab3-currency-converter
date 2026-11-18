@@ -13,7 +13,7 @@ from currency_converter.ports import Clock
 
 
 class RateLookupService(Protocol):
-    def lookup(self, requested_date: date) -> RateLookup: ...
+    def lookup(self, requested_date: date, *, use_saved: bool = False) -> RateLookup: ...
 
 
 @dataclass(frozen=True)
@@ -30,15 +30,15 @@ class ConverterService:
         self._validator = validator
         self._clock = clock
 
-    def rates(self, rate_date: str | None) -> RateLookup:
+    def rates(self, rate_date: str | None, use_saved: bool = False) -> RateLookup:
         today = self._clock.today()
         day = self._validator.validate_date(rate_date, today) if rate_date else today
-        return self._rates.lookup(day)
+        return self._rates.lookup(day, use_saved=use_saved)
 
     def convert(self, amount: str | None, source: str | None, target: str | None,
-                rate_date: str | None) -> ConversionOutcome:
+                rate_date: str | None, use_saved: bool = False) -> ConversionOutcome:
         request = self._validator.validate(amount, source, target, rate_date, self._clock.today())
-        lookup = self._rates.lookup(request.rate_date)
+        lookup = self._rates.lookup(request.rate_date, use_saved=use_saved)
         conversion = self._converter.convert(request.amount, request.source, request.target,
                                              lookup.table)
         return ConversionOutcome(conversion, lookup)
