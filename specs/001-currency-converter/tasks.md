@@ -34,9 +34,9 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create the package skeleton per plan.md: `currency_converter/{domain,application,adapters,presentation,web}/__init__.py`, `currency_converter/__init__.py` (`__version__ = "1.0.0"`), `currency_converter/__main__.py`, `main.py` launcher, `currency_converter/web/static/{css,js,img}/`
-- [ ] T002 [P] Create `pyproject.toml` (project metadata, `requires-python >= 3.10`, `[tool.pytest.ini_options]` with `testpaths = ["tests"]`, `pythonpath = ["."]`) and `requirements-dev.txt` (`pytest>=8`)
-- [ ] T003 [P] Implement `AppConfig` and `parse_config(argv, environ)` in `currency_converter/config.py`: `--host` (127.0.0.1), `--port` (8765), `--data-dir` / `CURRENCY_CONVERTER_DATA_DIR` (default per research R6), `--source-url` (BNM base URL), `--timeout` (8 s), `--no-browser`
+- [X] T001 Create the package skeleton per plan.md: `currency_converter/{domain,application,adapters,presentation,web}/__init__.py`, `currency_converter/__init__.py` (`__version__ = "1.0.0"`), `currency_converter/__main__.py`, `main.py` launcher, `currency_converter/web/static/{css,js,img}/`
+- [X] T002 [P] Create `pyproject.toml` (project metadata, `requires-python >= 3.10`, `[tool.pytest.ini_options]` with `testpaths = ["tests"]`, `pythonpath = ["."]`) and `requirements-dev.txt` (`pytest>=8`)
+- [X] T003 [P] Implement `AppConfig` and `parse_config(argv, environ)` in `currency_converter/config.py`: `--host` (127.0.0.1), `--port` (8765), `--data-dir` / `CURRENCY_CONVERTER_DATA_DIR` (default per research R6), `--source-url` (BNM base URL), `--timeout` (8 s), `--no-browser`
 
 ---
 
@@ -46,16 +46,16 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 [P] Implement the error hierarchy from data-model.md in `currency_converter/domain/errors.py` (`ConverterError`, `FieldError`, `ValidationError`, `CurrencyNotAvailableError`, `RateSourceError` and subclasses, `NoSavedCopyError`)
-- [ ] T005 [P] Implement `Currency`, `ExchangeRate`, `RateTable`, `MDL` in `currency_converter/domain/models.py` (frozen dataclasses, `per_unit`, `currencies()`, `find()`)
-- [ ] T006 [P] Implement `is_weekend()` and `previous_business_day()` in `currency_converter/domain/calendar.py`
-- [ ] T007 [P] Implement `AmountParser`, `RateDateParser` and `ConversionRequestValidator` (all FR-008 rules, collects every field error) in `currency_converter/domain/validation.py`
-- [ ] T008 Define the ports `HttpClient`, `RateTableParser`, `RateProvider`, `RateCache`, `Clock`, `BrowserLauncher` as `typing.Protocol` in `currency_converter/ports.py`
-- [ ] T009 [P] Implement `SourceKind`, `NoticeKind`, `Notice`, `SavedCopy`, `SavedCopyInfo`, `RateLookup`, `RatesUnavailableError` in `currency_converter/application/lookup.py`
-- [ ] T010 [P] Implement `SystemClock` in `currency_converter/adapters/clock.py`
-- [ ] T011 [P] Implement display formatting (`format_amount`, `format_rate`, `format_date`, `format_datetime`; research R5) in `currency_converter/presentation/formatting.py`
-- [ ] T012 Implement the HTTP shell in `currency_converter/web/server.py`: request handler factory with injected controller, routing `GET /`, `GET /static/*` (traversal-safe, explicit MIME map), `GET/POST /api/*`, JSON responses, 16 KiB body limit, security headers, catch-all 500 with logging
-- [ ] T013 Implement the composition root `build_application(config)` and `main()` in `currency_converter/bootstrap.py`: UTF-8 console (research R9), logging, port selection (research R10), start server, print URL, Ctrl+C shutdown
+- [X] T004 [P] Implement the error hierarchy from data-model.md in `currency_converter/domain/errors.py` (`ConverterError`, `FieldError`, `ValidationError`, `CurrencyNotAvailableError`, `RateSourceError` and subclasses, `NoSavedCopyError`)
+- [X] T005 [P] Implement `Currency`, `ExchangeRate`, `RateTable`, `MDL` in `currency_converter/domain/models.py` (frozen dataclasses, `per_unit`, `currencies()`, `find()`)
+- [X] T006 [P] Implement `is_weekend()` and `previous_business_day()` in `currency_converter/domain/calendar.py`
+- [X] T007 [P] Implement `AmountParser`, `RateDateParser` and `ConversionRequestValidator` (all FR-008 rules, collects every field error) in `currency_converter/domain/validation.py`
+- [X] T008 Define the ports `HttpClient`, `RateTableParser`, `RateProvider`, `RateCache`, `Clock`, `BrowserLauncher` as `typing.Protocol` in `currency_converter/ports.py`
+- [X] T009 [P] Implement `SourceKind`, `NoticeKind`, `Notice`, `SavedCopy`, `SavedCopyInfo`, `RateLookup`, `RatesUnavailableError` in `currency_converter/application/lookup.py`
+- [X] T010 [P] Implement `SystemClock` in `currency_converter/adapters/clock.py`
+- [X] T011 [P] Implement display formatting (`format_amount`, `format_rate`, `format_date`, `format_datetime`; research R5) in `currency_converter/presentation/formatting.py`
+- [X] T012 Implement the HTTP shell in `currency_converter/web/server.py`: request handler factory with injected controller, routing `GET /`, `GET /static/*` (traversal-safe, explicit MIME map), `GET/POST /api/*`, JSON responses, 16 KiB body limit, security headers, catch-all 500 with logging
+- [X] T013 Implement the composition root `build_application(config)` and `main()` in `currency_converter/bootstrap.py`: UTF-8 console (research R9), logging, port selection (research R10), start server, print URL, Ctrl+C shutdown
 
 **Checkpoint**: `python main.py --no-browser` starts and serves an empty page
 
@@ -69,21 +69,21 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Implement `UrllibHttpClient` (timeout, User-Agent, maps `URLError`/timeouts/HTTP ≥ 400 to `SourceUnavailableError`) in `currency_converter/adapters/http_client.py`
-- [ ] T015 [P] [US1] Implement `BnmXmlParser` (empty body → `NoRatesPublishedError`, broken XML / missing fields → `MalformedResponseError`, `Decimal` values, nominal) in `currency_converter/adapters/bnm.py`
-- [ ] T016 [US1] Implement `BnmRateProvider` (URL `…?get_xml=1&date=DD.MM.YYYY`, uses `HttpClient` + `RateTableParser`) in `currency_converter/adapters/bnm.py`
-- [ ] T017 [P] [US1] Implement `CurrencyConverter` and `Conversion` (cross rate through MDL, inverse rate, same currency) in `currency_converter/domain/conversion.py`
-- [ ] T018 [US1] Implement `RateService.lookup(requested_date)` live path in `currency_converter/application/rate_service.py`
-- [ ] T019 [US1] Implement `ConverterService.rates()` / `convert()` (validate → lookup → convert) in `currency_converter/application/converter_service.py`
-- [ ] T020 [P] [US1] Implement source labels in `currency_converter/presentation/messages_ru.py` and `present_lookup`, `present_currencies`, `present_conversion` in `currency_converter/presentation/json_presenter.py` (contracts/http-api.md)
-- [ ] T021 [US1] Implement `ApiController` (`/api/health`, `/api/rates`, `/api/convert`) in `currency_converter/web/api.py` and wire it in `bootstrap.py`
-- [ ] T022 [US1] Create the page structure per contracts/ui.md in `currency_converter/web/static/index.html` and the logo/favicon in `currency_converter/web/static/img/logo.svg`
-- [ ] T023 [P] [US1] Create the design system and components (tokens, light/dark, glass card, pickers, swap, button, result card, chips, banners, skeletons, motion, reduced motion, ≥ 360 px) in `currency_converter/web/static/css/styles.css`
-- [ ] T024 [P] [US1] Implement the fetch wrapper `ApiClient` in `currency_converter/web/static/js/api.js`
-- [ ] T025 [P] [US1] Implement the searchable `CurrencyPicker` component (popular first, keyboard navigation) in `currency_converter/web/static/js/currency-picker.js`
-- [ ] T026 [P] [US1] Implement the theme switch in `currency_converter/web/static/js/theme.js`
-- [ ] T027 [US1] Implement the page controller in `currency_converter/web/static/js/app.js`: load rates, enable/disable Convert, Enter key, convert, swap with auto-recalculation, result card, copy result, latest-request-wins, loading indicators (spinner on Convert, skeleton while rates load; FR-016)
-- [ ] T028 [P] [US1] Implement `AppWindowLauncher`, `DefaultBrowserLauncher`, `FallbackBrowserLauncher` in `currency_converter/adapters/browser.py` and use them in `bootstrap.py` (skipped with `--no-browser`)
+- [X] T014 [P] [US1] Implement `UrllibHttpClient` (timeout, User-Agent, maps `URLError`/timeouts/HTTP ≥ 400 to `SourceUnavailableError`) in `currency_converter/adapters/http_client.py`
+- [X] T015 [P] [US1] Implement `BnmXmlParser` (empty body → `NoRatesPublishedError`, broken XML / missing fields → `MalformedResponseError`, `Decimal` values, nominal) in `currency_converter/adapters/bnm.py`
+- [X] T016 [US1] Implement `BnmRateProvider` (URL `…?get_xml=1&date=DD.MM.YYYY`, uses `HttpClient` + `RateTableParser`) in `currency_converter/adapters/bnm.py`
+- [X] T017 [P] [US1] Implement `CurrencyConverter` and `Conversion` (cross rate through MDL, inverse rate, same currency) in `currency_converter/domain/conversion.py`
+- [X] T018 [US1] Implement `RateService.lookup(requested_date)` live path in `currency_converter/application/rate_service.py`
+- [X] T019 [US1] Implement `ConverterService.rates()` / `convert()` (validate → lookup → convert) in `currency_converter/application/converter_service.py`
+- [X] T020 [P] [US1] Implement source labels in `currency_converter/presentation/messages_ru.py` and `present_lookup`, `present_currencies`, `present_conversion` in `currency_converter/presentation/json_presenter.py` (contracts/http-api.md)
+- [X] T021 [US1] Implement `ApiController` (`/api/health`, `/api/rates`, `/api/convert`) in `currency_converter/web/api.py` and wire it in `bootstrap.py`
+- [X] T022 [US1] Create the page structure per contracts/ui.md in `currency_converter/web/static/index.html` and the logo/favicon in `currency_converter/web/static/img/logo.svg`
+- [X] T023 [P] [US1] Create the design system and components (tokens, light/dark, glass card, pickers, swap, button, result card, chips, banners, skeletons, motion, reduced motion, ≥ 360 px) in `currency_converter/web/static/css/styles.css`
+- [X] T024 [P] [US1] Implement the fetch wrapper `ApiClient` in `currency_converter/web/static/js/api.js`
+- [X] T025 [P] [US1] Implement the searchable `CurrencyPicker` component (popular first, keyboard navigation) in `currency_converter/web/static/js/currency-picker.js`
+- [X] T026 [P] [US1] Implement the theme switch in `currency_converter/web/static/js/theme.js`
+- [X] T027 [US1] Implement the page controller in `currency_converter/web/static/js/app.js`: load rates, enable/disable Convert, Enter key, convert, swap with auto-recalculation, result card, copy result, latest-request-wins, loading indicators (spinner on Convert, skeleton while rates load; FR-016)
+- [X] T028 [P] [US1] Implement `AppWindowLauncher`, `DefaultBrowserLauncher`, `FallbackBrowserLauncher` in `currency_converter/adapters/browser.py` and use them in `bootstrap.py` (skipped with `--no-browser`)
 
 **Checkpoint**: US1 works end to end online
 
@@ -95,9 +95,9 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Independent Test**: quickstart V6–V7
 
-- [ ] T029 [US2] Add Russian texts for every `FieldError` code and for `CurrencyNotAvailableError` in `currency_converter/presentation/messages_ru.py`
-- [ ] T030 [US2] Map `ValidationError` → 422 `VALIDATION` with `fields[]` and `CurrencyNotAvailableError` → 422 in `currency_converter/web/api.py` / `json_presenter.py`
-- [ ] T031 [US2] Show field errors (outline, message, shake), clear them on edit and hide a stale result in `currency_converter/web/static/js/app.js` and `styles.css`
+- [X] T029 [US2] Add Russian texts for every `FieldError` code and for `CurrencyNotAvailableError` in `currency_converter/presentation/messages_ru.py`
+- [X] T030 [US2] Map `ValidationError` → 422 `VALIDATION` with `fields[]` and `CurrencyNotAvailableError` → 422 in `currency_converter/web/api.py` / `json_presenter.py`
+- [X] T031 [US2] Show field errors (outline, message, shake), clear them on edit and hide a stale result in `currency_converter/web/static/js/app.js` and `styles.css`
 
 **Checkpoint**: US1 + US2 work
 
@@ -109,11 +109,11 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Independent Test**: quickstart V10–V12
 
-- [ ] T032 [P] [US3] Implement `JsonFileRateCache` (schema 1, atomic write via temp + `os.replace`, corrupted/missing → `None`) in `currency_converter/adapters/json_cache.py`
-- [ ] T033 [US3] Extend `RateService`: save the saved copy after each live success, raise `RatesUnavailableError(cause, saved_info)` on source failures, `lookup(..., use_saved=True)` mode with `SAVED_COPY` notice, `NoSavedCopyError` in `currency_converter/application/rate_service.py`
-- [ ] T034 [P] [US3] Implement `MemoizingRateProvider` (positive results only, 30 min TTL, thread-safe) in `currency_converter/adapters/memo.py` and wire it in `bootstrap.py`
-- [ ] T035 [US3] Present `SOURCE_UNAVAILABLE` (503, `saved` info), `NO_SAVED_COPY` (404) and saved source labels in `json_presenter.py`, `messages_ru.py`, `web/api.py`
-- [ ] T036 [US3] Implement banners/toasts in `currency_converter/web/static/js/notices.js` and the offline flow in `app.js`: offer banner, saved-copy mode banner with «Попробовать онлайн», empty state with «Повторить» on start
+- [X] T032 [P] [US3] Implement `JsonFileRateCache` (schema 1, atomic write via temp + `os.replace`, corrupted/missing → `None`) in `currency_converter/adapters/json_cache.py`
+- [X] T033 [US3] Extend `RateService`: save the saved copy after each live success, raise `RatesUnavailableError(cause, saved_info)` on source failures, `lookup(..., use_saved=True)` mode with `SAVED_COPY` notice, `NoSavedCopyError` in `currency_converter/application/rate_service.py`
+- [X] T034 [P] [US3] Implement `MemoizingRateProvider` (positive results only, 30 min TTL, thread-safe) in `currency_converter/adapters/memo.py` and wire it in `bootstrap.py`
+- [X] T035 [US3] Present `SOURCE_UNAVAILABLE` (503, `saved` info), `NO_SAVED_COPY` (404) and saved source labels in `json_presenter.py`, `messages_ru.py`, `web/api.py`
+- [X] T036 [US3] Implement banners/toasts in `currency_converter/web/static/js/notices.js` and the offline flow in `app.js`: offer banner, saved-copy mode banner with «Попробовать онлайн», empty state with «Повторить» on start
 
 **Checkpoint**: US1–US3 work; app survives network loss and restarts
 
@@ -125,9 +125,9 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 **Independent Test**: quickstart V8–V9
 
-- [ ] T037 [US4] Implement the weekend shift and the not-published fallback (≤ 10 days back, `RatesNotFoundError`) with `WEEKEND` / `NOT_PUBLISHED` / `NOT_YET_PUBLISHED` notices in `currency_converter/application/rate_service.py`
-- [ ] T038 [US4] Add notice texts and `RATES_NOT_FOUND` mapping in `messages_ru.py`, `json_presenter.py`, `web/api.py`
-- [ ] T039 [US4] Date limits (min 2000-01-01, max tomorrow), «Сегодня» chip, info banners for notices and auto-recalculation on date change in `index.html` / `app.js` (the field itself comes from T022)
+- [X] T037 [US4] Implement the weekend shift and the not-published fallback (≤ 10 days back, `RatesNotFoundError`) with `WEEKEND` / `NOT_PUBLISHED` / `NOT_YET_PUBLISHED` notices in `currency_converter/application/rate_service.py`
+- [X] T038 [US4] Add notice texts and `RATES_NOT_FOUND` mapping in `messages_ru.py`, `json_presenter.py`, `web/api.py`
+- [X] T039 [US4] Date limits (min 2000-01-01, max tomorrow), «Сегодня» chip, info banners for notices and auto-recalculation on date change in `index.html` / `app.js` (the field itself comes from T022)
 
 **Checkpoint**: all user stories work independently
 
@@ -135,10 +135,10 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T040 [P] Write `README.md` (purpose, requirements, run, options, data directory, architecture overview)
-- [ ] T041 [P] Write the operating manual `docs/USER_GUIDE.md` (Russian, every screen state and scenario, troubleshooting)
-- [ ] T042 [P] Add Windows launcher `run.bat`
-- [ ] T043 Run quickstart.md scenarios V1–V12 and fix findings
+- [X] T040 [P] Write `README.md` (purpose, requirements, run, options, data directory, architecture overview)
+- [X] T041 [P] Write the operating manual `docs/USER_GUIDE.md` (Russian, every screen state and scenario, troubleshooting)
+- [X] T042 [P] Add Windows launcher `run.bat`
+- [X] T043 Run quickstart.md scenarios V1–V12 and fix findings
 
 ---
 

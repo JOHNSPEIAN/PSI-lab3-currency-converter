@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Конвертер валют · НБМ</title>
+  <link rel="icon" href="/static/img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <script type="module" src="/static/js/app.js"></script>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+  </div>
+
+  <main class="shell">
+    <header class="header">
+      <div class="brand">
+        <img class="brand__logo" src="/static/img/logo.svg" alt="" width="48" height="48">
+        <div>
+          <h1 class="brand__title">Конвертер валют</h1>
+          <p class="brand__subtitle">Официальные курсы Национального банка Молдовы</p>
+        </div>
+      </div>
+      <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Сменить тему">
+        <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20.7 14.6A8.5 8.5 0 0 1 9.4 3.3a.75.75 0 0 0-.98-.95A10 10 0 1 0 21.65 15.6a.75.75 0 0 0-.95-1Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></g></svg>
+      </button>
+    </header>
+
+    <section class="card" id="card" aria-busy="true" aria-label="Конвертер">
+      <div class="banners" id="banners" aria-live="polite"></div>
+
+      <form class="form" id="converter-form" novalidate autocomplete="off">
+        <div class="field" data-field="amount">
+          <label class="field__label" for="amount">Сумма</label>
+          <div class="amount-input">
+            <input class="amount-input__control" id="amount" name="amount" inputmode="decimal"
+                   placeholder="0" maxlength="32" spellcheck="false" aria-describedby="amount-error" autofocus>
+            <span class="amount-input__code" id="amount-code" aria-hidden="true">USD</span>
+          </div>
+          <p class="field__error" id="amount-error" role="alert"></p>
+        </div>
+
+        <div class="pair">
+          <div class="field" data-field="source">
+            <span class="field__label" id="source-label">Из</span>
+            <div class="picker" id="source-picker"></div>
+            <p class="field__error" id="source-error" role="alert"></p>
+          </div>
+          <button class="swap" id="swap" type="button" aria-label="Поменять валюты местами" title="Поменять местами">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h13"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8"/></g></svg>
+          </button>
+          <div class="field" data-field="target">
+            <span class="field__label" id="target-label">В</span>
+            <div class="picker picker--end" id="target-picker"></div>
+            <p class="field__error" id="target-error" role="alert"></p>
+          </div>
+        </div>
+
+        <div class="field" data-field="date">
+          <label class="field__label" for="date">Дата курса</label>
+          <div class="date-row">
+            <input class="date-input" id="date" name="date" type="date" required aria-describedby="date-error date-hint">
+            <button class="chip-btn" id="today-btn" type="button" aria-pressed="true">Сегодня</button>
+          </div>
+          <p class="field__hint" id="date-hint">Курс НБМ публикуется в рабочие дни до 13:00 и действует весь следующий рабочий день.</p>
+          <p class="field__error" id="date-error" role="alert"></p>
+        </div>
+
+        <button class="convert" id="convert" type="submit" disabled>
+          <span class="convert__label">Конвертировать</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      <section class="result" id="result" hidden aria-live="polite" aria-label="Результат">
+        <p class="result__from" id="result-from"></p>
+        <div class="result__main">
+          <output class="result__value" id="result-value" for="amount"></output>
+          <button class="icon-btn icon-btn--ghost" id="copy-btn" type="button" aria-label="Скопировать результат" title="Скопировать">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></g></svg>
+          </button>
+        </div>
+        <p class="result__target" id="result-target"></p>
+        <div class="result__rates" id="result-rates"></div>
+        <div class="result__meta">
+          <span class="chip" id="rate-date-chip">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g></svg>
+            <span class="chip__text"></span>
+          </span>
+          <span class="chip chip--source" id="source-chip"><span class="dot" aria-hidden="true"></span><span class="chip__text"></span></span>
+        </div>
+        <p class="result__stale" id="result-stale">Сумма изменена — нажмите Enter или «Конвертировать», чтобы пересчитать.</p>
+      </section>
+
+      <section class="empty" id="empty-state" hidden>
+        <svg class="empty__art" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="56" class="empty__halo"/>
+          <path class="empty__cloud" d="M38 78h46a16 16 0 0 0 1.8-31.9A22 22 0 0 0 43.4 50 14 14 0 0 0 38 78Z"/>
+          <path class="empty__slash" d="M34 34l52 52"/>
+        </svg>
+        <h2 class="empty__title">Курсы пока недоступны</h2>
+        <p class="empty__text" id="empty-text">Сохранённых курсов пока нет. Проверьте подключение к интернету и повторите попытку.</p>
+        <button class="btn btn--primary" id="empty-retry" type="button">Повторить</button>
+      </section>
+    </section>
+
+    <footer class="footer">
+      Данные: <a href="https://www.bnm.md" target="_blank" rel="noopener noreferrer">Национальный банк Молдовы</a> · bnm.md<br>
+      Приложение работает локально, последние полученные курсы сохраняются на этом компьютере.
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
