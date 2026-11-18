@@ -82,7 +82,7 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 - [ ] T024 [P] [US1] Implement the fetch wrapper `ApiClient` in `currency_converter/web/static/js/api.js`
 - [ ] T025 [P] [US1] Implement the searchable `CurrencyPicker` component (popular first, keyboard navigation) in `currency_converter/web/static/js/currency-picker.js`
 - [ ] T026 [P] [US1] Implement the theme switch in `currency_converter/web/static/js/theme.js`
-- [ ] T027 [US1] Implement the page controller in `currency_converter/web/static/js/app.js`: load rates, enable/disable Convert, Enter key, convert, swap with auto-recalculation, result card, copy result, latest-request-wins
+- [ ] T027 [US1] Implement the page controller in `currency_converter/web/static/js/app.js`: load rates, enable/disable Convert, Enter key, convert, swap with auto-recalculation, result card, copy result, latest-request-wins, loading indicators (spinner on Convert, skeleton while rates load; FR-016)
 - [ ] T028 [P] [US1] Implement `AppWindowLauncher`, `DefaultBrowserLauncher`, `FallbackBrowserLauncher` in `currency_converter/adapters/browser.py` and use them in `bootstrap.py` (skipped with `--no-browser`)
 
 **Checkpoint**: US1 works end to end online
@@ -127,7 +127,7 @@ in the final phase (Phase 8) because they are developed on a separate git branch
 
 - [ ] T037 [US4] Implement the weekend shift and the not-published fallback (≤ 10 days back, `RatesNotFoundError`) with `WEEKEND` / `NOT_PUBLISHED` / `NOT_YET_PUBLISHED` notices in `currency_converter/application/rate_service.py`
 - [ ] T038 [US4] Add notice texts and `RATES_NOT_FOUND` mapping in `messages_ru.py`, `json_presenter.py`, `web/api.py`
-- [ ] T039 [US4] Date field (min/max), «Сегодня» chip, info banners for notices and auto-recalculation on date change in `index.html` / `app.js`
+- [ ] T039 [US4] Date limits (min 2000-01-01, max tomorrow), «Сегодня» chip, info banners for notices and auto-recalculation on date change in `index.html` / `app.js` (the field itself comes from T022)
 
 **Checkpoint**: all user stories work independently
 

@@ -182,7 +182,7 @@ Chisinau time; each time the used date and an explanation are shown.
 - **FR-011**: For a Saturday or Sunday the system MUST use the rate of the last preceding business
   day and explicitly tell the user which date is used.
 - **FR-012**: When the source publishes no rates for a date (empty answer or no currencies), the
-  system MUST try earlier dates one by one (up to 10 days back), use the first date with rates and
+  system MUST try earlier business days one by one (weekends skipped, up to 10 calendar days back), use the first date with rates and
   explicitly tell the user both dates; if nothing is found it MUST show an error. For tomorrow's
   date the message MUST add that the rate is usually published after 13:00 Chisinau time.
 - **FR-013**: When the source is unreachable (no network, timeout, server error) the system MUST
@@ -209,7 +209,8 @@ Chisinau time; each time the used date and an explanation are shown.
   derived rate per one unit.
 - **Rate Table**: all exchange rates published for one date; knows its date.
 - **Rate Lookup Result**: rate table + requested date + date actually used + source kind
-  (live/saved) + save time + list of notices for the user (weekend, not published, offline).
+  (live/saved) + save time + list of notices for the user (weekend, not published, not yet
+  published, saved copy in use). Being offline is an error state, not a notice.
 - **Conversion Result**: amount, source and target currency, converted amount, direct and inverse
   rate, provenance (rate date, source).
 - **Saved Copy**: the last successful source response with the date it is valid for and the moment

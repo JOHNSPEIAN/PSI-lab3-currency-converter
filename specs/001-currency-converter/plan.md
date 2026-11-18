@@ -127,6 +127,7 @@ tests/
 ├── fixtures/                        # recorded BNM XML responses + broken variants
 └── unit/                            # parser, conversion, validation, rate service, cache, presenter, api
 pyproject.toml                       # pytest configuration
+run.bat                              # Windows double-click launcher
 requirements-dev.txt                 # pytest
 ```
 
