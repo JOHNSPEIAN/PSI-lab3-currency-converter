@@ -8,18 +8,20 @@ from dataclasses import dataclass
 from typing import Sequence
 
 from currency_converter import __version__
+from currency_converter.adapters.bnm import BnmRateProvider, BnmXmlParser
+from currency_converter.adapters.clock import SystemClock
+from currency_converter.adapters.http_client import UrllibHttpClient
+from currency_converter.application.converter_service import ConverterService
+from currency_converter.application.rate_service import RateService
 from currency_converter.config import AppConfig, parse_config
-from currency_converter.web.responses import ApiHandler, ApiRequest, ApiResponse, error_body
+from currency_converter.domain.conversion import CurrencyConverter
+from currency_converter.domain.validation import ConversionRequestValidator
+from currency_converter.presentation.json_presenter import JsonPresenter
+from currency_converter.web.api import ApiController
+from currency_converter.web.responses import ApiHandler
 from currency_converter.web.server import bind_server
 
 log = logging.getLogger("currency_converter")
-
-
-class _NotImplementedApi:
-    """Placeholder until the API controller exists (Phase 2 checkpoint)."""
-
-    def handle(self, request: ApiRequest) -> ApiResponse:
-        return ApiResponse(404, error_body("NOT_FOUND", "Не найдено."))
 
 
 @dataclass(frozen=True)
@@ -29,7 +31,13 @@ class Application:
 
 
 def build_application(config: AppConfig) -> Application:
-    return Application(config=config, api=_NotImplementedApi())
+    clock = SystemClock()
+    http = UrllibHttpClient(timeout=config.timeout, user_agent=f"CurrencyConverter/{__version__}")
+    provider = BnmRateProvider(http, BnmXmlParser(), base_url=config.source_url)
+    rate_service = RateService(provider, clock)
+    service = ConverterService(rate_service, CurrencyConverter(), ConversionRequestValidator(), clock)
+    api = ApiController(service, JsonPresenter(), version=__version__)
+    return Application(config=config, api=api)
 
 
 def _configure_console() -> None:
